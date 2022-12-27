@@ -3,12 +3,21 @@ import { useState } from 'react';
 import './App.css';
 
 let name = '김태우';
-// let title = ['혜화 맛집 리스트','홍대 맛집 리스트' , '노량진 맛집 리스트'];
-
 function App() {
     let [title,setTitle] =useState(['혜화 맛집 리스트','홍대 맛집 리스트' , '노량진 맛집 리스트']);
+    let [publish,setPublish] =useState(['2022.10.27','2021.07.09' , '2022.01.03']);
     let [like,setLike] = useState([0,0,0]);
     let [count,setCount] = useState(0);
+    let [flag,setFlag] = useState(false);
+    let [modal,setModal] = useState(false);
+    let [clickIndex, setClickIndex] = useState(9999);
+    
+function onoff(index){
+    setClickIndex(index);
+    if(index == clickIndex) setModal(!modal);
+    else setModal((!modal) ? true : modal)
+}
+
   return (
     <div className="App">
         <div onClick={()=>{setCount(count+1);console.log(count)}}>안녕</div>
@@ -20,10 +29,9 @@ function App() {
         {title.map((data,index)=>
             <div key={index}>
                 <div className='list'>
-                <h4>{data}<span onClick={()=>{
+                <h4><span onClick={()=>{onoff(index);}}>{data}</span><span onClick={()=>{
                     let likearr = [...like];
                     likearr[index] = like[index]+1;
-                    console.log(likearr)
                     setLike(likearr);
                 }}>💚</span>
                 {like[index]}</h4>
@@ -31,12 +39,28 @@ function App() {
             </div>
             <hr/>
             </div>
-        )}
+        )}{/* title.map end */}
+        <p><button className='btn btn-secondary' id='titlebtn' onClick={()=>setTitle(['버거비' , '버거킹', '맘스터치'])}>Title Change</button></p>
+        <p><button className='btn btn-secondary' id='titlebtn' onClick={()=>setTitle([...title].sort())}>Title Sort</button></p>
+        
+        {
+            modal ? <MyModal title={title} publish={publish} clickIndex={clickIndex}/> : null
+        }
+
+        
     </div>
     
   );
 }
-
+function MyModal(props){
+    return(
+        <div>
+            <h2>{props.title[props.clickIndex]}</h2>
+            <p>{props.publish[props.clickIndex]}</p>
+            <p>상세내용</p>
+        </div>
+    )
+}
 export default App;
 
 
